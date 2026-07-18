@@ -1,6 +1,10 @@
 # PromptCue
 
-Teleprompter em overlay para gravação de vídeos no Android. Fica flutuando por cima da câmera nativa (ou de qualquer outro app) enquanto você grava, com o texto rolando de baixo pra cima numa faixa fixa e discreta no centro da tela — sem precisar desviar o olho pra ler.
+Teleprompter em overlay para gravação de vídeos no Android. Fica flutuando por cima da câmera nativa (ou de qualquer outro app) enquanto você grava, com o texto rolando de baixo pra cima numa faixa fixa e discreta no centro da tela, sem precisar desviar o olho pra ler.
+
+## Download
+
+Baixe o APK pronto na [página de releases](https://github.com/abobicaduco/teleprompter-overlay/releases/latest) e instale direto no Android (é preciso permitir instalação de fontes desconhecidas).
 
 ## Como funciona
 
@@ -11,7 +15,7 @@ Teleprompter em overlay para gravação de vídeos no Android. Fica flutuando po
 
 ## Recursos
 
-- Faixa fixa, não arrastável, posicionada um pouco acima do centro — perto de onde fica a lente frontal, pra parecer que você está olhando pra quem assiste.
+- Faixa fixa, não arrastável, posicionada um pouco acima do centro, perto de onde fica a lente frontal, pra parecer que você está olhando pra quem assiste.
 - Play/pausa com retomada de onde parou; ao terminar o roteiro, o play seguinte reinicia do começo.
 - Scroll manual com o dedo quando pausado.
 - Controle de velocidade e tamanho da fonte, salvos entre sessões.
