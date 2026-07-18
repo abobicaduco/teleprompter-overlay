@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class _OverlayTeleprompterState extends State<OverlayTeleprompter>
   late Ticker _ticker;
   Duration _lastTick = Duration.zero;
   bool _skipNextDt = false;
+  StreamSubscription? _overlaySub;
 
   String _text = '';
   bool _playing = false;
@@ -41,6 +43,27 @@ class _OverlayTeleprompterState extends State<OverlayTeleprompter>
     WakelockPlus.enable();
     _ticker = createTicker(_onTick)..start();
     _load();
+    // O FlutterEngine do overlay fica em cache e é reaproveitado entre
+    // aberturas, então initState só roda na primeira vez. Nas próximas
+    // vezes o app manda o roteiro atualizado por aqui.
+    _overlaySub = FlutterOverlayWindow.overlayListener.listen(_onShareData);
+  }
+
+  void _onShareData(dynamic message) {
+    if (message is! Map) return;
+    final text = message['text'];
+    if (text is! String) return;
+    if (!mounted) return;
+    setState(() {
+      _text = text.trim().isEmpty
+          ? 'Cole um roteiro no app PromptCue e toque em Abrir teleprompter.'
+          : text;
+      _playing = false;
+      _controlsExpanded = true;
+    });
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(0);
+    }
   }
 
   Future<void> _load() async {
@@ -122,6 +145,7 @@ class _OverlayTeleprompterState extends State<OverlayTeleprompter>
 
   @override
   void dispose() {
+    _overlaySub?.cancel();
     _ticker.dispose();
     _scrollController.dispose();
     WakelockPlus.disable();

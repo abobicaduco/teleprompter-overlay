@@ -163,6 +163,12 @@ class _HomeScreenState extends State<HomeScreen> {
         visibility: NotificationVisibility.visibilitySecret,
       );
 
+      // O overlay reaproveita o mesmo FlutterEngine entre aberturas, então
+      // ele só relê o SharedPreferences sozinho na primeiríssima vez. Nas
+      // próximas, manda o roteiro atual direto pra ele não ficar com texto
+      // velho.
+      await FlutterOverlayWindow.shareData({'text': text});
+
       // Fecha a UI do app; o serviço do overlay continua sozinho.
       await Future<void>.delayed(const Duration(milliseconds: 150));
       await _closeAppUi();
