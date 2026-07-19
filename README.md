@@ -4,7 +4,7 @@ Teleprompter em overlay para gravação de vídeos no Android. Fica flutuando po
 
 ## Download
 
-Baixe o APK pronto na [página de releases](https://github.com/abobicaduco/teleprompter-overlay/releases/latest) e instale direto no Android (é preciso permitir instalação de fontes desconhecidas).
+Baixe o APK pronto na [página de releases](https://github.com/caducosilva/teleprompter-overlay/releases/latest) e instale direto no Android (é preciso permitir instalação de fontes desconhecidas).
 
 ## Como funciona
 
@@ -37,3 +37,10 @@ Requer permissão de "Aparecer sobre outros apps" no Android, concedida na prime
 ## Licença
 
 MIT — veja [LICENSE](LICENSE).
+
+## Autor
+
+**CADUCOSILVA** — [Carlos Eduardo (@caducosilva)](https://github.com/caducosilva)  
+Contato: abobicarlo@gmail.com
+
+Doações via PIX (chave aleatória): `f74458dc-2a36-49bd-9250-1cef4365ebb8`
