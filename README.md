@@ -17,7 +17,7 @@ Baixe o APK pronto na [página de releases](https://github.com/caducosilva/telep
 
 - Faixa fixa, não arrastável, posicionada um pouco acima do centro, perto de onde fica a lente frontal, pra parecer que você está olhando pra quem assiste.
 - Play/pausa com retomada de onde parou; ao terminar o roteiro, o play seguinte reinicia do começo.
-- Scroll manual com o dedo quando pausado.
+- Scroll manual com o dedo a qualquer momento, mesmo com o teleprompter rolando: o dedo assume na hora e, ao soltar, a rolagem automática continua de onde você deixou.
 - Controle de velocidade e tamanho da fonte, salvos entre sessões.
 - A tela do app se esconde sozinha enquanto o overlay está ativo, pra nunca tampar a câmera durante a gravação.
 

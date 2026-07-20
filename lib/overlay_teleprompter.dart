@@ -9,7 +9,8 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import 'script_store.dart';
 
 /// Teleprompter flutuante: faixa estreita no centro, play/pausa, velocidade,
-/// e scroll manual com o dedo quando pausado.
+/// e scroll manual com o dedo a qualquer momento — durante a rolagem
+/// automática o dedo assume, e ao soltar o auto-scroll retoma de onde parou.
 class OverlayTeleprompter extends StatefulWidget {
   const OverlayTeleprompter({super.key});
 
@@ -23,6 +24,7 @@ class _OverlayTeleprompterState extends State<OverlayTeleprompter>
   late Ticker _ticker;
   Duration _lastTick = Duration.zero;
   bool _skipNextDt = false;
+  bool _userDragging = false;
   StreamSubscription? _overlaySub;
 
   String _text = '';
@@ -83,7 +85,7 @@ class _OverlayTeleprompterState extends State<OverlayTeleprompter>
   }
 
   void _onTick(Duration elapsed) {
-    if (!_playing || !_scrollController.hasClients) {
+    if (!_playing || _userDragging || !_scrollController.hasClients) {
       _lastTick = elapsed;
       return;
     }
@@ -218,28 +220,49 @@ class _OverlayTeleprompterState extends State<OverlayTeleprompter>
                         blendMode: BlendMode.dstIn,
                         child: ScrollConfiguration(
                           behavior: const _NoGlowScrollBehavior(),
-                          child: SingleChildScrollView(
-                            controller: _scrollController,
-                            physics: _playing
-                                ? const NeverScrollableScrollPhysics()
-                                : const ClampingScrollPhysics(),
-                            padding: EdgeInsets.only(
-                              top: topPad,
-                              bottom: bottomPad,
-                              left: 10,
-                              right: 10,
-                            ),
-                            child: Text(
-                              _text,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: const Color(0xFFE8EAF6),
-                                fontSize: _fontSize,
-                                height: 1.35,
-                                fontWeight: FontWeight.w600,
-                                shadows: const [
-                                  Shadow(blurRadius: 8, color: Colors.black87),
-                                ],
+                          // O dedo funciona mesmo com o auto-scroll rodando:
+                          // um arraste do usuário (dragDetails != null) pausa
+                          // o ticker e, ao soltar (fim da rolagem, incluindo a
+                          // inércia do fling), o auto-scroll retoma dali.
+                          // Os jumpTo() do ticker também emitem notificações,
+                          // mas sempre sem dragDetails, então não interferem.
+                          child: NotificationListener<ScrollNotification>(
+                            onNotification: (notification) {
+                              if (notification is ScrollStartNotification &&
+                                  notification.dragDetails != null) {
+                                _userDragging = true;
+                              } else if (notification
+                                      is ScrollEndNotification &&
+                                  _userDragging) {
+                                _userDragging = false;
+                                _skipNextDt = true;
+                              }
+                              return false;
+                            },
+                            child: SingleChildScrollView(
+                              controller: _scrollController,
+                              physics: const ClampingScrollPhysics(),
+                              padding: EdgeInsets.only(
+                                top: topPad,
+                                bottom: bottomPad,
+                                left: 10,
+                                right: 10,
+                              ),
+                              child: Text(
+                                _text,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: const Color(0xFFE8EAF6),
+                                  fontSize: _fontSize,
+                                  height: 1.35,
+                                  fontWeight: FontWeight.w600,
+                                  shadows: const [
+                                    Shadow(
+                                      blurRadius: 8,
+                                      color: Colors.black87,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -316,7 +339,7 @@ class _OverlayTeleprompterState extends State<OverlayTeleprompter>
                 ),
                 const Spacer(),
                 Text(
-                  _playing ? 'rolando…' : 'role o dedo',
+                  _playing ? 'rolando · dedo ajusta' : 'role o dedo',
                   style: TextStyle(
                     color: _playing
                         ? const Color(0xFF1E90FF)
